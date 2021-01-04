@@ -5,6 +5,7 @@ namespace FitnessApp.BL.Model
     /// <summary>
     /// Стать.
     /// </summary>
+    [Serializable]
     public class Gender
     {
         /// <summary>
@@ -13,7 +14,7 @@ namespace FitnessApp.BL.Model
         public string Name { get; }
          
         /// <summary>
-        /// Створити нову стать
+        /// Створити нову стать.
         /// </summary>
         /// <param name="name"> Ім'я статі. </param>
         public Gender(string name)

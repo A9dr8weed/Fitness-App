@@ -5,6 +5,7 @@ namespace FitnessApp.BL.Model
     /// <summary>
     /// Користувач.
     /// </summary>
+    [Serializable]
     public class User
     {
         #region Властивості
@@ -69,7 +70,7 @@ namespace FitnessApp.BL.Model
 
             Name = name;
             Gender = gender;
-            BirthDate = birthDate;
+            BirthDate = birthDate; 
             Weight = weight;
             Height = height;
         }
