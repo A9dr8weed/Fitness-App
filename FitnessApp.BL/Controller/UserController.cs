@@ -1,7 +1,9 @@
 ﻿using FitnessApp.BL.Model;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace FitnessApp.BL.Controller
@@ -14,33 +16,60 @@ namespace FitnessApp.BL.Controller
         /// <summary>
         /// Користувач додатка.
         /// </summary>
-        public User User { get; }
+        public List<User> Users { get; }
+        public User CurrentUser { get; }
+        public bool IsNewUser { get; } = false;
 
         /// <summary>
         /// Створення нового користувача.
         /// </summary>
-        /// <param name="user"></param>
-        public UserController(string userName, string genderName, DateTime birthDay, double weight, double height)
+        public UserController(string userName)
         {
-            Gender gender = new Gender(genderName);
-            User = new User(userName, gender, birthDay, weight, height);
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                throw new ArgumentNullException("Ім'я користувача не може бути пустим", nameof(userName));
+            }
+
+            Users = GetUsersData();
+
+            CurrentUser = Users.SingleOrDefault(x => x.Name == userName);
+
+            if (CurrentUser == null)
+            {
+                CurrentUser = new User(userName);
+                Users.Add(CurrentUser);
+                IsNewUser = true;
+                Save();
+            }
         }
 
         /// <summary>
-        /// Отримати користувача.
+        /// Отримати збережений список користувачів.
         /// </summary>
-        /// <returns> Користувач додатку. </returns>
-        public UserController()
+        private List<User> GetUsersData()
         {
             BinaryFormatter formatter = new BinaryFormatter();
 
             using (FileStream fs = new FileStream("users.dat", FileMode.OpenOrCreate))
             {
-                if (formatter.Deserialize(fs) is User user)
+                if (formatter.Deserialize(fs) is List<User> users)
                 {
-                    User = user;
+                    return users;
+                }
+                else
+                {
+                    return new List<User>();
                 }
             }
+        }
+
+        public void SetNewUserData(string genderName, DateTime birthDate, double weight = 1, double height = 1)
+        {
+            CurrentUser.Gender = new Gender(genderName);
+            CurrentUser.BirthDate = birthDate;
+            CurrentUser.Weight = weight;
+            CurrentUser.Height = height;
+            Save();
         }
 
         /// <summary>
@@ -52,7 +81,7 @@ namespace FitnessApp.BL.Controller
 
             using (FileStream fs = new FileStream("users.dat", FileMode.OpenOrCreate))
             {
-                formatter.Serialize(fs, User);
+                formatter.Serialize(fs, Users);
             }
         }
     }

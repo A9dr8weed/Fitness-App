@@ -16,11 +16,11 @@ namespace FitnessApp.BL.Model
         /// <summary>
         /// Стать.
         /// </summary>
-        public Gender Gender { get; }
+        public Gender Gender { get; set; }
         /// <summary>
         /// Дата народження.
         /// </summary>
-        public DateTime BirthDate { get; }
+        public DateTime BirthDate { get; set; }
         /// <summary>
         /// Вага.
         /// </summary>
@@ -29,6 +29,23 @@ namespace FitnessApp.BL.Model
         /// Ріст.
         /// </summary>
         public double Height { get; set; }
+        /// <summary>
+        /// Розрахунок віку.
+        /// </summary>
+        public int Age
+        {
+            get
+            {
+                int age = DateTime.Now.Year - BirthDate.Year;
+
+                if (DateTime.Now.Month < BirthDate.Month || (DateTime.Now.Month == BirthDate.Month && DateTime.Now.Day < BirthDate.Day))
+                {
+                    age--;
+                }
+
+                return age;
+            }
+        }
         #endregion
 
         /// <summary>
@@ -75,9 +92,19 @@ namespace FitnessApp.BL.Model
             Height = height;
         }
 
+        public User(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            Name = name;
+        }
+
         public override string ToString()
         {
-            return Name;
+            return $"{Name} {Age}";
         }
     }
 }

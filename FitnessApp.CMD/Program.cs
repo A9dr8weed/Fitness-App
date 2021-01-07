@@ -4,29 +4,66 @@ using System;
 
 namespace FitnessApp.CMD
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.Default;
+
             Console.WriteLine("Вас вітає додаток Fitness-App");
-            
+
             Console.WriteLine("Введіть ім'я користувача");
             string name = Console.ReadLine();
 
-            Console.WriteLine("Введіть стать");
-            string gender = Console.ReadLine();
+            UserController userController = new UserController(name);
+            
+            if (userController.IsNewUser)
+            {
+                Console.Write("Введіть стать: ");
+                string gender = Console.ReadLine();
+                DateTime birthDate = ParseDateTime();
+                double weight = ParseDouble("вага");
+                double height = ParseDouble("ріст");
 
-            Console.WriteLine("Введіть дату народження");
-            DateTime birthDate = DateTime.Parse(Console.ReadLine());
+                userController.SetNewUserData(gender, birthDate, weight, height);
+            }
 
-            Console.WriteLine("Введіть вагу");
-            double weight = double.Parse(Console.ReadLine());
+            Console.WriteLine(userController.CurrentUser);
+        }
 
-            Console.WriteLine("Введіть ріст");
-            double height = double.Parse(Console.ReadLine());
+        private static DateTime ParseDateTime()
+        {
+            DateTime birthDate;
+            while (true)
+            {
+                Console.Write("Введіть дату народження (dd.MM.yyyy): ");
+                if (DateTime.TryParse(Console.ReadLine(), out birthDate))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Неправильний формат дати");
+                }
+            }
 
-            UserController userController = new UserController(name, gender, birthDate, weight, height);
-            userController.Save();
+            return birthDate;
+        }
+
+        private static double ParseDouble(string name)
+        {
+            while (true)
+            {
+                Console.Write($"Введіть {name}: ");
+                if (double.TryParse(Console.ReadLine(), out double value))
+                {
+                    return value;
+                }
+                else
+                {
+                    Console.WriteLine($"Неправильний формат {name}");
+                }
+            }
         }
     }
 }
