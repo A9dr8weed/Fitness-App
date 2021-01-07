@@ -16,7 +16,7 @@ namespace FitnessApp.CMD
             string name = Console.ReadLine();
 
             UserController userController = new UserController(name);
-            
+
             if (userController.IsNewUser)
             {
                 Console.Write("Введіть стать: ");
@@ -61,7 +61,7 @@ namespace FitnessApp.CMD
                 }
                 else
                 {
-                    Console.WriteLine($"Неправильний формат {name}");
+                    Console.WriteLine($"Неправильний формат {name}а");
                 }
             }
         }
