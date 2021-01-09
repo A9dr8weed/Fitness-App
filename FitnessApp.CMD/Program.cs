@@ -1,6 +1,8 @@
 ﻿using FitnessApp.BL.Controller;
+using FitnessApp.BL.Model;
 
 using System;
+using System.Collections.Generic;
 
 namespace FitnessApp.CMD
 {
@@ -16,6 +18,7 @@ namespace FitnessApp.CMD
             string name = Console.ReadLine();
 
             UserController userController = new UserController(name);
+            EatingController eatingController = new EatingController(userController.CurrentUser);
 
             if (userController.IsNewUser)
             {
@@ -29,6 +32,38 @@ namespace FitnessApp.CMD
             }
 
             Console.WriteLine(userController.CurrentUser);
+
+            Console.WriteLine("Що ви хочете зробити?");
+            Console.WriteLine("Е - ввести прийом їжі");
+            ConsoleKeyInfo key = Console.ReadKey();
+
+            if (key.Key == ConsoleKey.E)
+            {
+                (Food Food, double Weight) foods = EnterEating();
+                eatingController.Add(foods.Food, foods.Weight);
+
+                foreach (KeyValuePair<Food, double> item in eatingController.Eating.Foods)
+                {
+                    Console.WriteLine($"\t{item.Key} - {item.Value}");
+                }
+            }
+        }
+
+        private static (Food Food, double Weight) EnterEating()
+        {
+            Console.Write("Введіть ім'я продукта: ");
+            string food = Console.ReadLine();
+
+            double callories = ParseDouble("калорійність");
+            double prot = ParseDouble("білки");
+            double fats = ParseDouble("жири");
+            double carbs = ParseDouble("вуглеводи");
+
+            double weight = ParseDouble("вага порції");
+
+            Food product = new Food(food, callories, prot, fats, carbs);
+
+            return (Food: product, Weight: weight);
         }
 
         private static DateTime ParseDateTime()
@@ -61,7 +96,7 @@ namespace FitnessApp.CMD
                 }
                 else
                 {
-                    Console.WriteLine($"Неправильний формат {name}а");
+                    Console.WriteLine($"Неправильний формат поля {name}");
                 }
             }
         }
