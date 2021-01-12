@@ -26,12 +26,13 @@ namespace FitnessApp.CMD
 
             UserController userController = new UserController(name);
             EatingController eatingController = new EatingController(userController.CurrentUser);
+            ExerciseController exerciseController = new ExerciseController(userController.CurrentUser);
 
             if (userController.IsNewUser)
             {
                 Console.Write("Введіть стать: ");
                 string gender = Console.ReadLine();
-                DateTime birthDate = ParseDateTime();
+                DateTime birthDate = ParseDateTime("дата народження");
                 double weight = ParseDouble("вага");
                 double height = ParseDouble("ріст");
 
@@ -40,20 +41,57 @@ namespace FitnessApp.CMD
 
             Console.WriteLine(userController.CurrentUser);
 
-            Console.WriteLine("Що ви хочете зробити?");
-            Console.WriteLine("Е - ввести прийом їжі");
-            ConsoleKeyInfo key = Console.ReadKey();
-
-            if (key.Key == ConsoleKey.E)
+            while (true)
             {
-                (Food Food, double Weight) foods = EnterEating();
-                eatingController.Add(foods.Food, foods.Weight);
+                Console.WriteLine("Що ви хочете зробити?");
+                Console.WriteLine("Е - ввести прийом їжі");
+                Console.WriteLine("A - ввести вправу");
+                Console.WriteLine("Q - вихід");
+                ConsoleKeyInfo key = Console.ReadKey();
 
-                foreach (KeyValuePair<Food, double> item in eatingController.Eating.Foods)
+                switch (key.Key)
                 {
-                    Console.WriteLine($"\t{item.Key} - {item.Value}");
+                    case ConsoleKey.E:
+                        (Food Food, double Weight) foods = EnterEating();
+                        eatingController.Add(foods.Food, foods.Weight);
+
+                        foreach (KeyValuePair<Food, double> item in eatingController.Eating.Foods)
+                        {
+                            Console.WriteLine($"\t{item.Key} - {item.Value}");
+                        }
+
+                        break;
+
+                    case ConsoleKey.A:
+                        (DateTime Begin, DateTime End, Activity Activity) exe = EnterExercise();
+                        exerciseController.Add(exe.Activity, exe.Begin, exe.End);
+
+                        foreach (Exercise item in exerciseController.Exercises)
+                        {
+                            Console.WriteLine($"\t{item.Activity} з {item.Start.ToShortTimeString()} до {item.Finish.ToShortTimeString()}");
+                        }
+
+                        break;
+
+                    case ConsoleKey.Q:
+                        Environment.Exit(0);
+
+                        break;
                 }
             }
+        }
+
+        private static (DateTime Begin, DateTime End, Activity Activity) EnterExercise()
+        {
+            Console.Write("Введіть назву вправи: ");
+            string name = Console.ReadLine();
+
+            double energy = ParseDouble("розхід енергії в хвилину");
+            DateTime begin = ParseDateTime("початок вправи");
+            DateTime end = ParseDateTime("кінець вправи");
+            Activity activity = new Activity(name, energy);
+
+            return (begin, end, activity);
         }
 
         private static (Food Food, double Weight) EnterEating()
@@ -73,19 +111,19 @@ namespace FitnessApp.CMD
             return (Food: product, Weight: weight);
         }
 
-        private static DateTime ParseDateTime()
+        private static DateTime ParseDateTime(string value)
         {
             DateTime birthDate;
             while (true)
             {
-                Console.Write("Введіть дату народження (dd.MM.yyyy): ");
+                Console.Write($"Введіть {value} (dd.MM.yyyy): ");
                 if (DateTime.TryParse(Console.ReadLine(), out birthDate))
                 {
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("Неправильний формат дати");
+                    Console.WriteLine($"Неправильний формат {value}");
                 }
             }
 
