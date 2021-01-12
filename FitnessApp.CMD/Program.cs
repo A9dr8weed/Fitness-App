@@ -3,6 +3,9 @@ using FitnessApp.BL.Model;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Resources;
+using System.Threading;
 
 namespace FitnessApp.CMD
 {
@@ -11,10 +14,14 @@ namespace FitnessApp.CMD
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.Default;
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US"); // uk-UA, en-US
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+            ResourceManager resourceManager = new ResourceManager("FitnessApp.CMD.Languages.Messages", typeof(Program).Assembly);
 
-            Console.WriteLine("Вас вітає додаток Fitness-App");
+            Console.WriteLine(resourceManager.GetString("Hello", culture));
 
-            Console.WriteLine("Введіть ім'я користувача");
+            Console.WriteLine(resourceManager.GetString("EnterName", culture));
             string name = Console.ReadLine();
 
             UserController userController = new UserController(name);
