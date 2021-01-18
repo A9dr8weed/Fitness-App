@@ -118,7 +118,7 @@ namespace FitnessApp.CMD
             while (true)
             {
                 Console.Write($"Введіть {value} (dd.MM.yyyy): ");
-                
+
                 if (DateTime.TryParse(Console.ReadLine(), out birthDate))
                 {
                     break;
