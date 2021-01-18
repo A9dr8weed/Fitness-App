@@ -8,11 +8,14 @@ namespace FitnessApp.BL.Model
     [Serializable]
     public class Gender
     {
+        public int Id { get; set; }
         /// <summary>
         /// Назва.
         /// </summary>
-        public string Name { get; }
-         
+        public string Name { get; set; }
+
+        public Gender() { }
+
         /// <summary>
         /// Створити нову стать.
         /// </summary>

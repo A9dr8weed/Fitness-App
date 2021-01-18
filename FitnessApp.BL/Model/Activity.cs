@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FitnessApp.BL.Model
 {
     [Serializable]
     public class Activity
     {
-        public string Name { get; }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public double CalloriesPerMinute { get; set; }
+        public virtual ICollection<Exercise> Exercises { get; set; }
+
+        public Activity() { }
 
         public Activity(string name, double calloriesPerMinute)
         {

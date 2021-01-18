@@ -83,7 +83,7 @@ namespace FitnessApp.CMD
 
         private static (DateTime Begin, DateTime End, Activity Activity) EnterExercise()
         {
-            Console.Write("Введіть назву вправи: ");
+            Console.Write("\nВведіть назву вправи: ");
             string name = Console.ReadLine();
 
             double energy = ParseDouble("розхід енергії в хвилину");
@@ -114,9 +114,11 @@ namespace FitnessApp.CMD
         private static DateTime ParseDateTime(string value)
         {
             DateTime birthDate;
+
             while (true)
             {
                 Console.Write($"Введіть {value} (dd.MM.yyyy): ");
+                
                 if (DateTime.TryParse(Console.ReadLine(), out birthDate))
                 {
                     break;
@@ -135,6 +137,7 @@ namespace FitnessApp.CMD
             while (true)
             {
                 Console.Write($"Введіть {name}: ");
+
                 if (double.TryParse(Console.ReadLine(), out double value))
                 {
                     return value;

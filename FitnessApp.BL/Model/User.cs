@@ -9,10 +9,11 @@ namespace FitnessApp.BL.Model
     public class User
     {
         #region Властивості
+        public int Id { get; set; }
         /// <summary>
         /// Ім'я.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
         /// <summary>
         /// Стать.
         /// </summary>
@@ -47,6 +48,8 @@ namespace FitnessApp.BL.Model
             }
         }
         #endregion
+
+        public User() { }
 
         /// <summary>
         /// Створити нового користувача.
@@ -87,7 +90,7 @@ namespace FitnessApp.BL.Model
 
             Name = name;
             Gender = gender;
-            BirthDate = birthDate; 
+            BirthDate = birthDate;
             Weight = weight;
             Height = height;
         }
